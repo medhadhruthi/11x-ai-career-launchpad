@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "id": "usr-1",
+      "name": "Alex Vance",
+      "email": "alex.vance@example.com",
+      "passwordHash": "$2a$10$wE4L2wV4iR5x8nQd9H1J9.5YyV3X2Z1W0v9u8t7r6q5p4o3n2m1k0",
+      "createdAt": "2026-08-20T16:18:46.515Z"
+    }
+  ],
+  "career_profiles": {},
+  "resumes": {},
+  "job_analyses": {},
+  "applications": {},
+  "interview_sessions": {}
+}
