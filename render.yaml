@@ -1,6 +1,7 @@
 services:
   - type: web
     name: 11x-ai-career-launchpad
+    plan: free
     env: node
     buildCommand: npm install && npm run build
     startCommand: node server/index.js
