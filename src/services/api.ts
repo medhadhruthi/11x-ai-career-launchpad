@@ -1,4 +1,4 @@
-import { UserProfile, Resume, Application, JobAnalysis } from '../types';
+import { UserProfile, Resume, Application } from '../types';
 
 const API_BASE_URL = '/api';
 
@@ -47,7 +47,7 @@ export const api = {
     try {
       const res = await fetch(`${API_BASE_URL}/auth/me`, { headers: getAuthHeader() });
       if (res.ok) return await res.json();
-    } catch (e) {
+    } catch {
       console.warn('API backend offline, running in offline state.');
     }
     return null;
@@ -61,7 +61,7 @@ export const api = {
         const data = await res.json();
         return data.profile;
       }
-    } catch (e) {
+    } catch {
       console.warn('Backend server offline, fallback to LocalStorage');
     }
     return null;
@@ -75,7 +75,7 @@ export const api = {
         body: JSON.stringify(profile)
       });
       return res.ok;
-    } catch (e) {
+    } catch {
       return false;
     }
   },
@@ -88,7 +88,7 @@ export const api = {
         const data = await res.json();
         return data.resumes;
       }
-    } catch (e) {
+    } catch {
       console.warn('Backend server offline');
     }
     return null;
@@ -102,7 +102,7 @@ export const api = {
         body: JSON.stringify(resume)
       });
       return res.ok;
-    } catch (e) {
+    } catch {
       return false;
     }
   },
@@ -115,7 +115,7 @@ export const api = {
         const data = await res.json();
         return data.applications;
       }
-    } catch (e) {
+    } catch {
       console.warn('Backend server offline');
     }
     return null;
@@ -129,7 +129,7 @@ export const api = {
         body: JSON.stringify(app)
       });
       return res.ok;
-    } catch (e) {
+    } catch {
       return false;
     }
   }

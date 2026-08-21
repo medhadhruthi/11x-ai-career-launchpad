@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { JobTwinView } from './JobTwinView';
 import { DragDropSkillBoard } from './DragDropSkillBoard';
-import { generateSkillRoadmap, checkSkillEquivalency } from '../services/aiEngine';
+import { generateSkillRoadmap } from '../services/aiEngine';
 import {
   Rocket,
   Search,
@@ -14,12 +14,10 @@ import {
   ShieldCheck,
   Target,
   MessageSquare,
-  Briefcase,
   ChevronRight,
   ChevronLeft,
   Sparkles,
   ArrowRight,
-  ShieldAlert,
   Award
 } from 'lucide-react';
 
@@ -29,7 +27,6 @@ export const GetJobReadyWizard: React.FC = () => {
     setWizardStep,
     activeJobAnalysis,
     analyzeNewJob,
-    userProfile,
     setActiveView,
     addApplication,
     verifyUserSkill

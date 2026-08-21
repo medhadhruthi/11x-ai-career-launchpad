@@ -7,7 +7,6 @@ import {
   FileText,
   Search,
   Users,
-  ShieldCheck,
   CheckCircle2,
   Brain,
   Layers,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { MessageSquare, CheckCircle2, Play, BookOpen, Sparkles } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 export const InterviewPrepView: React.FC = () => {
   const { interviewQuestions, updateQuestionStatus, activeJobAnalysis } = useApp();

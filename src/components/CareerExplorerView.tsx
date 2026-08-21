@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getCareerRoleInfo } from '../services/aiEngine';
-import { Compass, Search, Repeat, CheckCircle2, ArrowRight, BookOpen } from 'lucide-react';
+import { Compass, Search, BookOpen } from 'lucide-react';
 
 export const CareerExplorerView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('Data Analyst');

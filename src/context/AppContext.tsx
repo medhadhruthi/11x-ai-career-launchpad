@@ -224,33 +224,34 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+const readStorageState = <T,>(key: string, fallback: T): T => {
+  try {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) as T : fallback;
+  } catch (error) {
+    console.warn(`Could not read ${key} from localStorage. Falling back to defaults.`, error);
+    return fallback;
+  }
+};
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Load from localStorage or default
   const [activeView, setActiveView] = useState<string>('landing');
   const [wizardStep, setWizardStep] = useState<number>(1);
   const [isStudentMode, setIsStudentMode] = useState<boolean>(true);
 
-  const [userProfile, setUserProfile] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem('11x_user_profile');
-    return saved ? JSON.parse(saved) : DEFAULT_USER_PROFILE;
-  });
+  const [userProfile, setUserProfile] = useState<UserProfile>(() => readStorageState<UserProfile>('11x_user_profile', DEFAULT_USER_PROFILE));
 
   const [activeJobAnalysis, setActiveJobAnalysis] = useState<JobAnalysis | null>(() => {
-    const saved = localStorage.getItem('11x_active_job');
-    return saved ? JSON.parse(saved) : analyzeJobDescription(DEFAULT_JOB_DESCRIPTION, DEFAULT_USER_PROFILE);
+    const saved = readStorageState<JobAnalysis | null>('11x_active_job', null);
+    return saved ?? analyzeJobDescription(DEFAULT_JOB_DESCRIPTION, DEFAULT_USER_PROFILE);
   });
 
-  const [savedResumes, setSavedResumes] = useState<Resume[]>(() => {
-    const saved = localStorage.getItem('11x_saved_resumes');
-    return saved ? JSON.parse(saved) : [DEFAULT_RESUME];
-  });
+  const [savedResumes, setSavedResumes] = useState<Resume[]>(() => readStorageState<Resume[]>('11x_saved_resumes', [DEFAULT_RESUME]));
 
   const [activeResume, setActiveResume] = useState<Resume>(() => savedResumes[0] || DEFAULT_RESUME);
 
-  const [savedApplications, setSavedApplications] = useState<Application[]>(() => {
-    const saved = localStorage.getItem('11x_saved_applications');
-    return saved ? JSON.parse(saved) : DEFAULT_APPLICATIONS;
-  });
+  const [savedApplications, setSavedApplications] = useState<Application[]>(() => readStorageState<Application[]>('11x_saved_applications', DEFAULT_APPLICATIONS));
 
   const [interviewQuestions, setInterviewQuestions] = useState<InterviewQuestion[]>(() => {
     return generateInterviewQuestions(userProfile, activeJobAnalysis || undefined);
@@ -324,7 +325,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const verifyUserSkill = (skillName: string, status: UserSkill['status'], proficiency?: UserSkill['proficiency']) => {
     setUserProfile(prev => {
       const existingIndex = prev.skills.findIndex(s => s.name.toLowerCase() === skillName.toLowerCase());
-      let updatedSkills = [...prev.skills];
+      const updatedSkills = [...prev.skills];
 
       if (existingIndex >= 0) {
         updatedSkills[existingIndex] = {

@@ -15,8 +15,6 @@ export const DragDropSkillBoard: React.FC = () => {
   const [verificationModalSkill, setVerificationModalSkill] = useState<string | null>(null);
 
   // Define initial columns based on active job analysis & user profile
-  const allReqs = activeJobAnalysis?.requirements.technicalSkills || [];
-
   const [columns, setColumns] = useState<Record<string, SkillBoardItem[]>>(() => {
     const verified = userProfile.skills.filter(s => s.status === 'verified').map(s => ({ id: `sk-${s.name}`, name: s.name, category: s.category }));
     const needEv = activeJobAnalysis?.comparison.needEvidence.map(s => ({ id: `ne-${s.skillName}`, name: s.skillName, category: 'Need Evidence', priority: s.priority })) || [];

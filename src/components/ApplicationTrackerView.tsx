@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { ApplicationStatus, Application } from '../types';
-import { Briefcase, Plus, CheckCircle2, Clock, XCircle, Award, ExternalLink } from 'lucide-react';
+import { ApplicationStatus } from '../types';
+import { Briefcase, Plus, Clock, Award } from 'lucide-react';
 
 export const ApplicationTrackerView: React.FC = () => {
   const { savedApplications, updateApplicationStatus, addApplication } = useApp();

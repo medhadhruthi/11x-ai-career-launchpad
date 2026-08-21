@@ -2,17 +2,10 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import {
   UserCheck,
-  GraduationCap,
-  Briefcase,
-  FolderGit2,
-  Award,
-  Link2,
-  Plus,
   Trash2,
   Save,
   CheckCircle,
   PlusCircle,
-  AlertCircle
 } from 'lucide-react';
 import { UserSkill, EvidenceItem, Project, WorkExperience, Education } from '../types';
 
@@ -25,9 +18,9 @@ export const MasterProfileView: React.FC = () => {
   const [personal, setPersonal] = useState(userProfile.personalInfo);
   const [skills, setSkills] = useState<UserSkill[]>(userProfile.skills);
   const [evidence, setEvidence] = useState<EvidenceItem[]>(userProfile.evidence);
-  const [projects, setProjects] = useState<Project[]>(userProfile.projects);
-  const [experience, setExperience] = useState<WorkExperience[]>(userProfile.experience);
-  const [education, setEducation] = useState<Education[]>(userProfile.education);
+  const [projects] = useState<Project[]>(userProfile.projects);
+  const [experience] = useState<WorkExperience[]>(userProfile.experience);
+  const [education] = useState<Education[]>(userProfile.education);
 
   // Skill Add Form
   const [newSkillName, setNewSkillName] = useState('');

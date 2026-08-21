@@ -1,23 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import { TemplateId, Resume } from '../types';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import {
   FileText,
   Download,
-  Printer,
-  Eye,
   ZoomIn,
   ZoomOut,
-  Sparkles,
-  Layout,
-  Plus,
-  Trash2,
   Save,
   CheckCircle2,
-  ChevronUp,
-  ChevronDown
 } from 'lucide-react';
 
 export const ResumeBuilder: React.FC = () => {
@@ -46,6 +36,10 @@ export const ResumeBuilder: React.FC = () => {
   const handleDownloadPDF = async () => {
     if (!previewRef.current) return;
     try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf')
+      ]);
       const canvas = await html2canvas(previewRef.current, { scale: 2 });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -53,7 +47,7 @@ export const ResumeBuilder: React.FC = () => {
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`${resumeData.title.replace(/\s+/g, '_')}_Resume.pdf`);
-    } catch (err) {
+    } catch {
       window.print();
     }
   };

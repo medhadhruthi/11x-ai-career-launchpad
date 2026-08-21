@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { ShieldCheck, Eye, Repeat, HelpCircle, CheckCircle2, AlertTriangle, XCircle, Clock } from 'lucide-react';
 
 export const ATSAnalyzerView: React.FC = () => {
-  const { activeJobAnalysis, savedResumes } = useApp();
+  const { activeJobAnalysis } = useApp();
   const [activeTab, setActiveTab] = useState<'ats' | 'recruiter' | 'ab-testing' | 'shortlist-diagnostic'>('ats');
 
   if (!activeJobAnalysis) {
