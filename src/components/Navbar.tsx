@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { AuthModal } from './AuthModal';
+import { api } from '../services/api';
 import {
   Rocket,
   LayoutDashboard,
@@ -30,10 +31,15 @@ export const Navbar: React.FC = () => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>({
-    name: 'Alex Vance',
-    email: 'alex.vance@example.com'
-  });
+  const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    api.getMe().then(response => {
+      if (response?.user) {
+        setCurrentUser(response.user);
+      }
+    });
+  }, []);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },

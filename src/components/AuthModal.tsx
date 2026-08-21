@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
-import { X, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { X, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -11,17 +11,33 @@ interface AuthModalProps {
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => {
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('alex.vance@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [forgotSuccess, setForgotSuccess] = useState(false);
+
+  useEffect(() => {
+    setError('');
+    setShowPassword(false);
+  }, [mode]);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (mode === 'forgot') {
+      setError('Password reset is not available yet. Please contact the administrator or create a new account.');
+      return;
+    }
+
+    if (mode === 'signup' && password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -33,20 +49,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
         const res = await api.login(email, password);
         onSuccess(res.user);
         onClose();
-      } else {
-        setForgotSuccess(true);
-        setTimeout(() => setForgotSuccess(false), 3000);
       }
-    } catch (err: any) {
-      setError(err.message || 'Authentication error occurred.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Authentication error occurred.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-5 relative">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto bg-slate-950/80 backdrop-blur-md p-4">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full max-h-[calc(100vh-2rem)] overflow-y-auto shadow-2xl space-y-5 relative my-auto">
         
         <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white p-1">
           <X className="w-5 h-5" />
@@ -70,13 +83,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
           </div>
         )}
 
-        {forgotSuccess && (
-          <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 p-3 rounded-xl text-xs flex items-center space-x-2">
-            <CheckCircle2 className="w-4 h-4" />
-            <span>Password reset instructions sent to {email}.</span>
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-3">
           {mode === 'signup' && (
             <div>
@@ -97,7 +103,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
             <input
               type="email"
               required
-              placeholder="alex.vance@example.com"
+              autoComplete="email"
+              placeholder="you@example.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-brand-500 focus:outline-none"
@@ -107,13 +114,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
           {mode !== 'forgot' && (
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">Password</label>
-              <input
-                type="password"
+              <div className="relative">
+                <input
+                type={showPassword ? 'text' : 'password'}
                 required
+                minLength={mode === 'signup' ? 8 : undefined}
+                autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+                placeholder={mode === 'signup' ? 'At least 8 characters' : 'Enter your password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-brand-500 focus:outline-none"
-              />
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 pr-10 text-xs text-white focus:border-brand-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(value => !value)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
           )}
 
